@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
         CharacterController controller = GetComponent<CharacterController>();
         // is the controller on the ground?
         if (controller.isGrounded)
@@ -31,10 +33,19 @@ public class PlayerController : MonoBehaviour
             //Multiply it by speed.
             moveDirection *= speed;
 
+            
+
         }
         //Applying gravity to the controller
         moveDirection.y -= gravity * Time.deltaTime;
         //Making the character move
         controller.Move(moveDirection * Time.deltaTime);
+
+        if (this.transform.position.y <= -50)
+        {
+            Debug.Log("reset pos");
+            this.transform.position = new Vector3(0, 10, 0);
+        }
+
     }
 }
