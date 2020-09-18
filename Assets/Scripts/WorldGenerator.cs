@@ -47,7 +47,7 @@ public class WorldGenerator : MonoBehaviour
         switch(direction)
         {
             case PathDirection.Bot:
-                Debug.Log("=== create bot path ===");
+                //Debug.Log("=== create bot path ===");
                 for (int floorZ = (int)position.y; floorZ > (int)position.y - floorLength + 1; floorZ--)
                 {
                     for (int floorX = (int)position.x; floorX < (int)position.x + floorWidth + 1; floorX++)
@@ -65,7 +65,7 @@ public class WorldGenerator : MonoBehaviour
                 }
                 break;
             case PathDirection.Top:
-                Debug.Log("=== create top path ===");
+                //Debug.Log("=== create top path ===");
                 for (int floorZ = (int)position.y; floorZ < (int)position.y + floorLength +1 ; floorZ++)
                 {
 
@@ -84,7 +84,7 @@ public class WorldGenerator : MonoBehaviour
                 }
                 break;
             case PathDirection.Left:
-                Debug.Log("=== create left path ===");
+                //Debug.Log("=== create left path ===");
                 for(int floorZ = (int)position.y; floorZ > (int)position.y - floorWidth-1; floorZ--)
                 {
                     for(int floorX = (int)position.x; floorX > (int)position.x - floorLength + 1; floorX--)
@@ -102,7 +102,7 @@ public class WorldGenerator : MonoBehaviour
                 }
                 break;
             case PathDirection.Right:
-                Debug.Log("=== create right path ===");
+                //Debug.Log("=== create right path ===");
                 for(int floorZ = (int)position.y; floorZ > (int)position.y - floorWidth-1; floorZ--)
                 {
                     for(int floorX = (int)position.x; floorX < (int)position.x + floorLength + 1; floorX++)
@@ -120,7 +120,7 @@ public class WorldGenerator : MonoBehaviour
                 }
                 break;
         }
-        Debug.Log("path at " + position);
+        //Debug.Log("path at " + position);
     }
 
     void CreateRoom(int startX, int startZ, int roomWidth, int roomLength)
@@ -147,7 +147,7 @@ public class WorldGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.visible = false;
+        
 
         // create room
         int roomWidth = Random.Range(15, 30);
