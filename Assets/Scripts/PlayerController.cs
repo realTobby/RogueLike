@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     public Inventory playerInventory;
     public SpellManager playerSpellManager;
 
+    public GameObject projectilePrefab;
+
     public float speed = 6.0F;
     public float jumpSpeed = 8.0F;
     public float gravity = 20.0F;
@@ -18,6 +20,8 @@ public class PlayerController : MonoBehaviour
 
     public Texture2D cursorTexture;
     RaycastHit hit;
+
+    private float dr;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +29,11 @@ public class PlayerController : MonoBehaviour
 
         playerInventory = GameObject.FindGameObjectWithTag("PLAYER").GetComponent<Inventory>();
         playerSpellManager = GameObject.FindGameObjectWithTag("PLAYER").GetComponent<SpellManager>();
+
+        
+
     }
+
 
     void UseItem(int index)
     {
@@ -52,14 +60,46 @@ public class PlayerController : MonoBehaviour
             UseItem(3);
     }
 
-    void MouseControl()
+    void CheckForSpellPress()
+    {
+        if(Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            CastSpell(1);
+        }
+    }
+
+    void CastSpell(int spellIndex)
+    {
+        ShootProjectile();
+    }
+
+    private void ShootProjectile()
+    {
+        Vector3 direction = GetRayPos() - this.transform.position;
+        direction.Normalize();
+        GameObject projectile = (GameObject)Instantiate(projectilePrefab, this.transform.position, Quaternion.identity);
+        projectile.GetComponent<Rigidbody>().velocity = direction * 100f;
+        Physics.IgnoreCollision(projectile.GetComponent<Collider>(), GetComponent<Collider>());
+    }
+
+    Vector3 GetRayPos()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
+        float distance = 100;
         if (Physics.Raycast(ray, out hit))
         {
             Debug.DrawLine(this.transform.position, hit.transform.position, Color.red);
+            Vector3 target = ray.GetPoint(distance);
+            return target;
         }
+        return new Vector3();
+    }
+
+    void MouseControl()
+    {
+        Vector3 direction = GetRayPos() - transform.position;
+        float rotation = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, rotation, 0);
     }
 
     // Update is called once per frame
@@ -69,23 +109,21 @@ public class PlayerController : MonoBehaviour
 
         CheckForInventoryPress();
 
-        CharacterController controller = GetComponent<CharacterController>();
+        CheckForSpellPress();
+
         // is the controller on the ground?
-        if (controller.isGrounded)
-        {
             //Feed moveDirection with input.
-            moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            moveDirection = transform.TransformDirection(moveDirection);
-            //Multiply it by speed.
-            moveDirection *= speed;
+            float h = Input.GetAxisRaw("Horizontal");
+            float v = Input.GetAxisRaw("Vertical");
 
-            
-
-        }
-        //Applying gravity to the controller
-        moveDirection.y -= gravity * Time.deltaTime;
-        //Making the character move
-        controller.Move(moveDirection * Time.deltaTime);
+            // float dr is declared outside
+            /** There is no diagonal rotation, atm. **/
+            if (h != 0) dr = 90 * h;
+            if (v < 0) dr = 180;
+            else if (v > 0) dr = 0;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, dr, 0), 360 * Time.deltaTime);
+            // not normalized, yet.
+            transform.position += new Vector3(h, 0, v) * Time.deltaTime * speed;
 
         if (this.transform.position.y <= -50)
         {
