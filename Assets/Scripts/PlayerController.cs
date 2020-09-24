@@ -11,12 +11,6 @@ public class PlayerController : MonoBehaviour
     public GameObject projectilePrefab;
 
     public float speed = 6.0F;
-    public float jumpSpeed = 8.0F;
-    public float gravity = 20.0F;
-    private Vector3 moveDirection = Vector3.zero;
-    private float turner;
-    private float looker;
-    public float sensitivity;
 
     public Texture2D cursorTexture;
     RaycastHit hit;
@@ -62,7 +56,7 @@ public class PlayerController : MonoBehaviour
 
     void CheckForSpellPress()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        if(Input.GetKey(KeyCode.Mouse0))
         {
             CastSpell(1);
         }
@@ -75,17 +69,21 @@ public class PlayerController : MonoBehaviour
 
     private void ShootProjectile()
     {
-        Vector3 direction = GetRayPos() - this.transform.position;
+        Vector3 direction = GetRayPos();
+
+        Vector3 tmp = this.transform.position;
+        tmp.y = tmp.y - 0.5f;
+
         direction.Normalize();
-        GameObject projectile = (GameObject)Instantiate(projectilePrefab, this.transform.position, Quaternion.identity);
+        GameObject projectile = (GameObject)Instantiate(projectilePrefab, tmp, Quaternion.identity);
         projectile.GetComponent<Rigidbody>().velocity = direction * 100f;
-        Physics.IgnoreCollision(projectile.GetComponent<Collider>(), GetComponent<Collider>());
+        Physics.IgnoreCollision(projectile.GetComponent<Collider>(), this.gameObject.GetComponent<Collider>());
     }
 
     Vector3 GetRayPos()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        float distance = 100;
+        float distance = 10000;
         if (Physics.Raycast(ray, out hit))
         {
             Debug.DrawLine(this.transform.position, hit.transform.position, Color.red);

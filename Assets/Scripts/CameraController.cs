@@ -31,6 +31,9 @@ public class CameraController : MonoBehaviour
         // Assign value to Camera position
         transform.position = temp;
 
+
+        StickCameraToPlayer();
+
     }
 
     public static void Shake(float duration, float amount)
@@ -58,7 +61,8 @@ public class CameraController : MonoBehaviour
 
     public void StickCameraToPlayer()
     {
-        this.transform.position = new Vector3(playerRef.transform.position.x, this.transform.position.y, playerRef.transform.position.z);
+        _originalPos = new Vector3(playerRef.transform.position.x, this.transform.position.y, playerRef.transform.position.z);
+        this.transform.position = _originalPos;
     }
 
 }

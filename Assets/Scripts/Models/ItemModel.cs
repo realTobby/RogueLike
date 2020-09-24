@@ -25,6 +25,8 @@ namespace Assets.Scripts.Models
         private List<Effect> effects;
         private int heal;
         private int inventoryIndex;
+        private bool isStackable;
+        private int stackSize;
 
         public ItemModel()
         {
@@ -131,7 +133,42 @@ namespace Assets.Scripts.Models
 
         public void Discard()
         {
-            Init();
+
+            if(IsStackable())
+            {
+                if (stackSize <= 0)
+                {
+                    Init();
+                }
+                else
+                {
+                    SetStackSize(GetStackSize() - 1);
+                }
+            }
+            else
+            {
+                Init();
+            }
+        }
+
+        public void SetStackable(bool value)
+        {
+            isStackable = value;
+        }
+
+        public bool IsStackable()
+        {
+            return isStackable;
+        }
+
+        public int GetStackSize()
+        {
+            return stackSize;
+        }
+
+        public void SetStackSize(int value)
+        {
+            stackSize = value;
         }
     }
 }

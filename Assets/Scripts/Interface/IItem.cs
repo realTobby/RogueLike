@@ -26,5 +26,9 @@ namespace Assets.Scripts.Interface
         void SetIsFull(bool value);
         void Convert(IItem item);
         void Discard();
+        void SetStackSize(int value);
+        int GetStackSize();
+        void SetStackable(bool value);
+        bool IsStackable();
     }
 }
